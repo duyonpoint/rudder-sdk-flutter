@@ -43,5 +43,12 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>Braze</key>
+	<dict>
+		<key>LogLevel</key>
+		<string>0</string>
+		<key>Endpoint</key>
+		<string>sdk.iad-03.braze.com</string>
+	</dict>
 </dict>
 </plist>

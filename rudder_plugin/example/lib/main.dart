@@ -3,6 +3,7 @@ import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:rudder_sdk_flutter/RudderController.dart';
 import 'package:rudder_sdk_flutter_platform_interface/platform.dart';
+import 'package:braze_plugin/braze_plugin.dart';
 
 class PlatformChannel extends StatefulWidget {
   const PlatformChannel({Key? key}) : super(key: key);
@@ -13,6 +14,7 @@ class PlatformChannel extends StatefulWidget {
 
 class _PlatformChannelState extends State<PlatformChannel> {
   final RudderController rudderClient = RudderController.instance;
+  late BrazePlugin _braze;
 
   void __identify() {
     RudderTraits traits = RudderTraits()
@@ -20,6 +22,13 @@ class _PlatformChannelState extends State<PlatformChannel> {
         .putAge("22")
         .putEmail("saivenkatdesu@gmail.com");
     rudderClient.identify("161FA04009", traits: traits);
+
+    _braze.changeUser("desuinccu");
+    _braze.setFirstName("Desu");
+    _braze.setLastName("Sai Venkat");
+    _braze.setDateOfBirth(1990, 4, 13);
+    _braze.setEmail("saivenkat@email.com");
+
     setOutput(
         "identify : \nname:Sai Venkat\nage: 22\nemail:saivenkatdesu@gmail.com"
         "\nuserId: 161FA04009\ntraits:empty");
@@ -28,10 +37,10 @@ class _PlatformChannelState extends State<PlatformChannel> {
   void __initialize() {
     MobileConfig mc = MobileConfig(autoCollectAdvertId: false);
     RudderConfigBuilder builder = RudderConfigBuilder();
-    builder.withDataPlaneUrl("https://38b5-175-101-36-4.ngrok.io");
+    builder.withDataPlaneUrl("https://c670-115-240-11-36.ngrok.io");
     builder.withMobileConfig(mc);
     // builder.withControlPlaneUrl("https://api.rudderlabs.com");
-    builder.withLogLevel(RudderLogger.VERBOSE);
+    builder.withLogLevel(RudderLogger.NONE);
     RudderOption options = RudderOption();
     options.putIntegration("Amplitude", true);
     //builder.withFactory(Appcenter());
@@ -42,6 +51,9 @@ class _PlatformChannelState extends State<PlatformChannel> {
     final String _writeKey = "1pAKRv50y15Ti6UWpYroGJaO0Dj";
     rudderClient.initialize(_writeKey,
         config: builder.build(), options: options);
+
+    // initializing braze flutter sdk
+    _braze = new BrazePlugin(customConfigs: {replayCallbacksConfigKey: true});
 
     setOutput("initialize:\nwriteKey: $_writeKey");
   }
@@ -57,6 +69,12 @@ class _PlatformChannelState extends State<PlatformChannel> {
     rudderClient.track("Went on a drive",
         properties: property, options: options);
 
+// track for braze
+    _braze.logCustomEvent("Went on a drive", properties: {"colour": "red"});
+//purchase for braze
+    _braze.logPurchase('product_id', 'USD', 9.99, 1,
+        properties: {'key1': 'value'});
+
     setOutput(
         "track:\n\tproperty:\n\t\tcolour:red\n\t\tmanufacturer:hyundai\n\t\tmodel:i20"
         "\n\toptions:\n\t\tall:false\n\t\tMixpanel:false\n\tevent: Went on a drive");
@@ -67,9 +85,7 @@ class _PlatformChannelState extends State<PlatformChannel> {
     screenProperty.put("browser", "chrome");
     screenProperty.put("device", "mac book pro");
     rudderClient.screen("Walmart Cart",
-        category: "home",
-        properties: screenProperty,
-        options: null);
+        category: "home", properties: screenProperty, options: null);
 
     setOutput(
         "screen:\n\tproperty:\n\t\tbrowser: chrome\n\t\tdevice: mac book pro\n\t\tname:Walmart Cart");
