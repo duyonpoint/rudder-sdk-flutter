@@ -12,14 +12,14 @@ class RudderController {
   final _platformChannel = const MethodChannel('rudder_sdk_flutter');
 
   void initialize(String writeKey,
-      {RudderConfig? config, RudderOption? options}) {
-    config ??= RudderConfig();
-    Map<String, dynamic> params = {};
-    params['writeKey'] = writeKey;
-    params['config'] = config.toMap();
-    if (options != null) {
-      params['options'] = options.toMap();
-    }
+      {required Map<String, dynamic> params}) {
+    // config ??= RudderConfig();
+    // Map<String, dynamic> params = {};
+    // params['writeKey'] = writeKey;
+    // params['config'] = config.toMap();
+    // if (options != null) {
+    //   params['options'] = options.toMap();
+    // }
     _platformChannel.invokeMethod("initializeSDK", params);
   }
 

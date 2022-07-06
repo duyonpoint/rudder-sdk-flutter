@@ -75,18 +75,17 @@ class _PlatformChannelState extends State<PlatformChannel> {
               child: const Text('Initialize SDK'),
               onPressed: () {
                 RudderConfigBuilder builder = RudderConfigBuilder();
-                builder.withDataPlaneUrl("https://friendly-badger-28.loca.lt");
-                builder.withControlPlaneUrl("https://56d9996d386b.ngrok.io");
-                builder.withLogLevel(RudderLogger.VERBOSE);
+                builder.withDataPlaneUrl("");
+                // builder.withControlPlaneUrl("https://56d9996d386b.ngrok.io");
+                builder.withLogLevel(RudderLogger.DEBUG);
                 RudderOption options = RudderOption();
-                options.putIntegration("Amplitude", true);
-                //builder.withFactory(Appcenter());
-                // 1. with RudderConfig Object
-                //RudderClient.getInstance("1n0JdVPZTRUIkLXYccrWzZwdGSx",
-                //   config: builder.build());
-                //2. With RudderConfigBuilder object
-                rudderClient.initialize("1shL9hswhzo3C0oAIfrnz8cMbjU",
-                    config: builder.build(), options: options);
+                // options.putIntegration("Amplitude", true);
+                final String _writeKey = "27Pr2YdYP6ziS6EOeFAcRMcj12A"; //28m4XFm1H3kbUs7kbE9mxzsRsjG, 27Pr2YdYP6ziS6EOeFAcRMcj12A
+                Map<String, dynamic> params = {};
+                params['writeKey'] = _writeKey;
+                params['config'] = builder.build().toMap();
+                params['options'] = options.toMap();
+                rudderClient.initialize(_writeKey, params: params);
               },
             ),
             ElevatedButton(
